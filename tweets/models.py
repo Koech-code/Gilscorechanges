@@ -43,10 +43,10 @@ class TweetManager(models.Manager):
 
 class Tweet(models.Model):
     # Maps to SQL data
-    # id = models.AutoField(primary_key=True)
-    parent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tweets") # many users can many tweets
-    likes = models.ManyToManyField(User, related_name='tweet_user', blank=True, through=TweetLike)
+    id = models.AutoField(primary_key=True)
+    # parent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tweets", null=True) # many users can many tweets
+    # likes = models.ManyToManyField(User, related_name='tweet_user', blank=True, through=TweetLike)
     content = models.TextField(blank=True, null=True)
     video = models.FileField(upload_to='videos/', blank=True, null=True)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
@@ -135,13 +135,21 @@ class Comment(models.Model):
     from django.db import models
 
 class UploadVideo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    videoname = models.CharField(max_length=50)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default='', null=True)
+    videoname = models.CharField(max_length=50, null=True)
     video = models.FileField(upload_to='videos/', blank=True, null=True)
+    image = models.ImageField(upload_to='images/', height_field=None, width_field=None, blank=True, null=True)
+    imagename = models.CharField(max_length=25, null=True)
     about = models.TextField(max_length=500, null=True)
 
     def __str__(self):
         return self.videoname
+
+    # def image_img(self):
+    #     if self.image:
+    #         return u'<img src="%s" width=50 height=50 />' % self.image.url
+    #     else:
+    #         return '(Sin imagen)'
 
 class CommentVideo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)

@@ -1,32 +1,43 @@
-import React from 'react'
-import {apiTweetCreate} from './lookup'
+import React from "react";
+import { apiTweetCreate } from "./lookup";
+import UploadImage from "./UploadImage";
 
-
-export function TweetCreate(props){
-  const textAreaRef = React.createRef()
-  const {didTweet} = props
-    const handleBackendUpdate = (response, status) =>{
-      if (status === 201){
-        didTweet(response)
-      } else {
-        console.log(response)
-        alert("An error occured please try again")
-      }
+export function TweetCreate(props) {
+  const textAreaRef = React.createRef();
+  const { didTweet } = props;
+  const handleBackendUpdate = (response, status) => {
+    if (status === 201) {
+      didTweet(response);
+    } else {
+      console.log(response);
+      alert("An error occured please try again");
     }
+  };
 
-    const handleSubmit = (event) => {
-      event.preventDefault()
-      const newVal = textAreaRef.current.value
-      // backend api request
-      apiTweetCreate(newVal, handleBackendUpdate)
-      textAreaRef.current.value = ''
-    }
-    return <div className={props.className}>
-          <form onSubmit={handleSubmit}>
-            <textarea ref={textAreaRef} required={true} className='form-control' name='tweet'>
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const newVal = textAreaRef.current.value;
+    // backend api request
+    apiTweetCreate(newVal, handleBackendUpdate);
+    textAreaRef.current.value = "";
+  };
+  return (
+    <div className={props.className}>
+      <div>
+        <UploadImage />
+      </div>
+      <form onSubmit={handleSubmit}>
+        <textarea
+          ref={textAreaRef}
+          required={true}
+          className="form-control"
+          name="tweet"
+        ></textarea>
 
-            </textarea>
-            <button type='submit' className='btn btn-primary my-3'>Tweet</button>
-        </form>
-  </div>
+        <button type="submit" className="btn btn-primary my-3">
+          Tweet
+        </button>
+      </form>
+    </div>
+  );
 }

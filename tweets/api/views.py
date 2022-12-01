@@ -11,7 +11,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ..forms import TweetForm
-from ..models import Tweet, UploadVideo, CommentVideo
+from ..models import Tweet, UploadVideo, CommentVideo, Comment
 from ..serializers import (
     TweetSerializer, 
     TweetActionSerializer,
@@ -20,7 +20,8 @@ from ..serializers import (
     CommentTweetSerializer,
     CommentVideoSerializer
 )
-
+# from rest_framework.parsers import MultiPartParser
+# from rest_framework.decorators import parser_classes
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
 @api_view(['POST']) # http method the client == POST
@@ -29,7 +30,7 @@ ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 def tweet_create_view(request, *args, **kwargs):
     serializer = TweetCreateSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
-        serializer.save(user=request.user)
+        serializer.save()
         return Response(serializer.data, status=201)
     return Response({}, status=400)
 
@@ -117,6 +118,7 @@ def tweet_list_view(request, *args, **kwargs):
     return get_paginated_queryset_response(qs, request)
 
 @api_view(['POST'])
+# @parser_classes([MultiPartParser])
 def upload_video_view(request, *args, **kwags):
     '''
     Upload a video for other users to see and comment on.
@@ -162,7 +164,7 @@ def see_all_tweet_comments(request, id, *args, **kwags):
     '''
     See all comments made on a tweet
     '''
-    commentedtweets = Tweet.objects.filter(tweet=id)
+    commentedtweets = Comment.objects.filter(tweet=id)
     serializetweetcomments = CommentTweetSerializer(commentedtweets, many=True)
 
     return Response(serializetweetcomments.data)

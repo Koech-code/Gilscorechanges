@@ -29,7 +29,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.25.107', '127.0.0.1','Gilscore3-dev.us-west-1.elasticbeanstalk.com', '172.31.26.131', '.cfe.sh', 'localhost']
+ALLOWED_HOSTS = ['192.168.45.7', '192.168.25.107', '127.0.0.1','Gilscore3-dev.us-west-1.elasticbeanstalk.com', '172.31.26.131', '.cfe.sh', 'localhost']
 
 #ALLOWED_HOSTS = ['SportsApp.eba-h3jtbm88.us-west-2.elasticbeanstalk.com']
 
@@ -106,11 +106,14 @@ WSGI_APPLICATION = 'tweetme2.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES={
-   'default':{
-      'ENGINE':'django.db.backends.sqlite3',
-      'NAME':os.path.join(BASE_DIR,'db.sqlite3'),
-   }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'bongasport',
+        'USER': 'postgres',
+        'PASSWORD': 'Nickson_100$',
+        'HOST': 'localhost',
+    }
 }
 
 #AUTH_USER_MODEL = 'accounts.User'
@@ -162,9 +165,9 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS =True
 
 
-DEFAULT_RENDERER_CLASSES = [
-        'rest_framework.renderers.JSONRenderer',
-    ]
+# DEFAULT_RENDERER_CLASSES = [
+#         'rest_framework.renderers.JSONRenderer',
+#     ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -214,3 +217,9 @@ MEDIAFILES_LOCATION = 'media'
 #arn:aws:s3:::gilscore
 #AKIAXDRNNI42RNA4JTM7
 #TfNsmDoiVJhXH6WgjUt992Dhg72UKXDwvbO5KbEZ
+
+CORS_ALLOWED_ORIGINS = [
+    "http://192.168.45.7:8000",
+ 
+]
+

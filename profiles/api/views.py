@@ -119,7 +119,6 @@ class GetUserProfileView(APIView):
         except:
             return Response({'error': 'Error occurred when trying to get user profile'})
 
-
 @permission_classes([IsAuthenticated])
 class UpdateUserProfileView(APIView):
     def put(self, request, format=None):
