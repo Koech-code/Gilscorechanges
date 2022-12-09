@@ -135,6 +135,8 @@ urlpatterns = [
     path('api/Champions/', include('Champions.api.urls')),
     re_path(r'api/profiles?/', include('profiles.api.urls')),
     path('tweets/', include('tweets.api.urls')),
+    # path(r'^api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+    
 ]
 
 if settings.DEBUG:

@@ -79,6 +79,8 @@ class FollowerRelation(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=50, null=True, default='')
+    last_name = models.CharField(max_length=50, null=True, default='')
     image = models.FileField( blank=True, null=True,upload_to='images/')
     clubimage = models.ImageField(max_length=220, choices= CLUB_CHOICES, default='Manchester')
     location = models.CharField(max_length=220, null=True, blank=True)

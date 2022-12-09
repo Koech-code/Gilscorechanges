@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+
 # User Serializer
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,3 +29,24 @@ class LoginSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
         raise serializers.ValidationError('Incorrect Credentials Passed.')
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    model = User
+
+    """
+    Serializer for password change endpoint.
+    """
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+
+# class RequestResetPasswordSerializer(serializers.Serializer):
+#     email = serializers.EmailField()
+
+#     class Meta:
+#         fields = ['email']
+
+#     def validate(sel, attrs):
+#             email = attrs['data'].get('email',)
+        

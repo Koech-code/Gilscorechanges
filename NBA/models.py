@@ -44,7 +44,7 @@ class TweetManager(models.Manager):
 class Tweet(models.Model):
     # Maps to SQL data
     # id = models.AutoField(primary_key=True)
-    parent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL)
+    # parent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="NBAtweets") # many users can many tweets
     likes = models.ManyToManyField(User, related_name='NBAtweet_user', blank=True, through=NBATweetLike)
     content = models.TextField(blank=True, null=True)

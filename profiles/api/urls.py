@@ -21,7 +21,6 @@ urlpatterns = [
     path('<str:username>/edit', profile_update_view),   
 ]
 
-
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, 
                 document_root=settings.STATIC_ROOT)

@@ -68,7 +68,8 @@ INSTALLED_APPS = [
     # media/static storage
     'storages',
     'django_extensions',
-
+    'django_rest_passwordreset',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [      
@@ -223,3 +224,16 @@ CORS_ALLOWED_ORIGINS = [
  
 ]
 
+
+# REST_FRAMEWORK = {
+#     'DATETIME_FORMAT': '%s000',
+# }
+
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS=True
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_PORT=587
+EMAIL_HOST_USER='kipkorirkoech098@gmail.com'
+EMAIL_HOST_PASSWORD='koech1234'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

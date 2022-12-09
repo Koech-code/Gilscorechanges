@@ -4,6 +4,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
 from django.db.models import Q
+# from django.db.models import Count
+# from django.contrib.humanize.templatetags.humanize import naturaltime
 
 User = settings.AUTH_USER_MODEL
 
@@ -52,6 +54,20 @@ class Tweet(models.Model):
     image = models.ImageField(upload_to='images/', blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     #comments = models.ForeignKey("Comment", on_delete=models.CASCADE, related_name="Baseballcomments")
+    
+    # def FORMAT(self):
+      
+    #     return naturaltime(self.timestamp)
+
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     representation['timestamp'] = naturaltime(instance.timestamp)
+        
+    #     return representation
+
+    # @property
+    # def timesince(self):
+    #     return timesince.timesince(self.timestamp)
 
     objects = TweetManager()
     # def __str__(self):
@@ -74,6 +90,11 @@ class Tweet(models.Model):
             "likes": random.randint(0, 200)
         }
 
+
+    # def FORMAT(self):
+    #    from django.utils.timesince import timesince
+    #    return timesince(self.timestamp)
+       
     # @property
     # def comments(self):
     #     instance = self
@@ -90,21 +111,21 @@ class Tweet(models.Model):
 
 class Comment(models.Model):
     #id = models.AutoField(primary_key=True)
-    parent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL)
+    # parent = models.ForeignKey("self", null=True, on_delete=models.SET_NULL)
     tweet = models.ForeignKey(Tweet,  on_delete=models.CASCADE, null=True, related_name="tweets_comments")
     user=models.ForeignKey(User,on_delete=models.CASCADE, related_name="comments")
     likes = models.ManyToManyField(User, related_name='comment_user', blank=True, through=CommentLike)
     content=models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
     timestamp=models.DateTimeField(auto_now_add=True)
+    total_comments = models.ForeignKey('self',related_name='comment_count',blank=True,null=True,on_delete = models.CASCADE)
 
     objects = TweetManager()
 
+
+    
  #   def __str__(self):
   #      return 'comment on {} by {}'.format(self.post.title,self.user.username)
-
-
-
 
     class Meta:
         ordering = ['-id']

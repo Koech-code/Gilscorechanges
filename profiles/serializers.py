@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 
 from .models import Profile, ChampionLeague, AfconLeague, Baseball, Bundesliga, Formula1, Laliga, NBA, NFL, Worldcup
 from tweets.models import Tweet
+from django.contrib.humanize.templatetags.humanize import naturaltime
 #from tweets.serializers import TweetSerializer
 #from accounts.models import User
 
@@ -37,9 +38,14 @@ class ProfileSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Profile
-        fields = ['location', 'bio', 'first_name','last_name','image', 'email', 'username','clubimage', 'Afcon', 'Baseball', 'Bundesliga', 'Europa','Formula1', 'Laliga', 'NBA', 'NFL', 'Worldcup']
+        fields = ['location', 'bio', 'first_name','last_name','image', 'email', 'username','clubimage', 'Afcon', 'Baseball', 'Bundesliga', 'Europa','Formula1', 'Laliga', 'NBA', 'NFL', 'Worldcup', 'timestamp']
     def get_username(self, obj):
         return obj.user.username
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['timestamp'] = naturaltime(instance.timestamp)
+        return representation
 
 class ProfileBasicSerializer(serializers.Serializer):
     first_name = serializers.CharField(required=False)
@@ -73,8 +79,8 @@ class PublicProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = [
-            # "first_name",
-            # "last_name",
+            "first_name",
+            "last_name",
             
             "image",
             "Afcon",

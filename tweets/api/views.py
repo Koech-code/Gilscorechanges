@@ -18,7 +18,7 @@ from ..serializers import (
     TweetCreateSerializer,
     VideoSerializer,
     CommentTweetSerializer,
-    CommentVideoSerializer
+    CommentVideoSerializer,
 )
 # from rest_framework.parsers import MultiPartParser
 # from rest_framework.decorators import parser_classes
@@ -165,6 +165,7 @@ def see_all_tweet_comments(request, id, *args, **kwags):
     See all comments made on a tweet
     '''
     commentedtweets = Comment.objects.filter(tweet=id)
+    
     serializetweetcomments = CommentTweetSerializer(commentedtweets, many=True)
 
     return Response(serializetweetcomments.data)

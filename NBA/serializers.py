@@ -3,10 +3,11 @@ from django.conf import settings
 from rest_framework import serializers
 from profiles.serializers import PublicProfileSerializer
 from .models import Tweet, Comment, NBAVideo, CommentNBAVideo
-
+from django.contrib.humanize.templatetags.humanize import naturaltime
 
 MAX_TWEET_LENGTH = settings.MAX_TWEET_LENGTH
 TWEET_ACTION_OPTIONS = settings.TWEET_ACTION_OPTIONS
+
 
 class TweetActionSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -35,11 +36,18 @@ class CommentActionSerializer(serializers.Serializer):
 
 class TweetCreateSerializer(serializers.ModelSerializer):
     user = PublicProfileSerializer(source='user.profile', read_only=True) # serializers.SerializerMethodField(read_only=True)
-    likes = serializers.SerializerMethodField(read_only=True)
-    #image = serializers.SerializerMethodField()
+    # likes = serializers.SerializerMethodField(read_only=True)
+    # image = serializers.SerializerMethodField()
     class Meta:
         model = Tweet
-        fields = ['user', 'id', 'content', 'likes','image', 'timestamp']
+        fields = [
+            'user', 
+            # 'id', 
+            'content', 
+            # 'likes',
+            'image', 
+            'timestamp'
+            ]
 
  
     
@@ -58,6 +66,11 @@ class TweetCreateSerializer(serializers.ModelSerializer):
         if len(value) > MAX_TWEET_LENGTH:
             raise serializers.ValidationError("This tweet is too long")
         return value
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['timestamp'] = naturaltime(instance.timestamp)
+        return representation
 
 class CommentCreateSerializer(serializers.ModelSerializer):
     user = PublicProfileSerializer(source='user.profile', read_only=True) # serializers.SerializerMethodField(read_only=True)

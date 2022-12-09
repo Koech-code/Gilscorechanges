@@ -128,25 +128,39 @@ class UpdateUserProfileView(APIView):
 
             data = self.request.data
             
-            # first_name = data['first_name']
-            # last_name = data['last_name']
+            first_name = data['first_name']
+            last_name = data['last_name']
             image = data['image']
-            Afcon = data['Afcon']
-            Baseball = data['Baseball']
-            Bundesliga = data['Bundesliga']
-            Europa = data['Europa']
-            Formula1 = data['Formula1']
-            Laliga = data['Laliga']
-            NBA = data['NBA']
-            NFL = data['NFL']
-            Worldcup = data['Worldcup']
+            # Afcon = data['Afcon']
+            # Baseball = data['Baseball']
+            # Bundesliga = data['Bundesliga']
+            # Europa = data['Europa']
+            # Formula1 = data['Formula1']
+            # Laliga = data['Laliga']
+            # NBA = data['NBA']
+            # NFL = data['NFL']
+            # Worldcup = data['Worldcup']
             bio = data['bio']
             location = data['location']
             
 
             user = User.objects.get(id=user.id)
-            Profile.objects.filter(user=user).update(image=image, Afcon=Afcon, Baseball=Baseball,
-             Bundesliga=Bundesliga, Europa=Europa, Formula1=Formula1, Laliga=Laliga, NBA=NBA, NFL=NFL, Worldcup=Worldcup, bio=bio, location=location)
+            Profile.objects.filter(user=user).update(
+                image=image, 
+                first_name=first_name,
+                last_name=last_name,
+                # Afcon=Afcon, 
+                # Baseball=Baseball,
+                # Bundesliga=Bundesliga, 
+                # Europa=Europa, 
+                # Formula1=Formula1, 
+                # Laliga=Laliga, 
+                # NBA=NBA, 
+                # NFL=NFL, 
+                # Worldcup=Worldcup, 
+                bio=bio, 
+                location=location
+             )
 
             user_profile = Profile.objects.get(user=user)
 
