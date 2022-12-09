@@ -122,7 +122,7 @@ class CommentTweetSerializer(serializers.ModelSerializer):
 
     def get_total_comments(self, obj):
 
-        total = Comment.objects.filter(tweet_id=15).count()
+        total = Comment.objects.filter(tweet_id=obj.tweet_id).count()
         return total
 
     def get_likes(self,obj):
