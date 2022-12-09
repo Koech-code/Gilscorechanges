@@ -3,7 +3,10 @@ from django.conf import settings
 from rest_framework import serializers
 from profiles.serializers import PublicProfileSerializer
 from .models import Tweet, Comment, UploadVideo, CommentVideo
+from django.contrib.humanize.templatetags.humanize import naturaltime
 
+
+# from django.db.models import Count
 
 MAX_TWEET_LENGTH = settings.MAX_TWEET_LENGTH
 TWEET_ACTION_OPTIONS = settings.TWEET_ACTION_OPTIONS
@@ -39,7 +42,7 @@ class TweetCreateSerializer(serializers.ModelSerializer):
     # image = serializers.SerializerMethodField()
     class Meta:
         model = Tweet
-        fields = ['image','content', 'user']
+        fields = ['image','content', 'user','timestamp']
 
  
     
@@ -58,6 +61,11 @@ class TweetCreateSerializer(serializers.ModelSerializer):
         if len(value) > MAX_TWEET_LENGTH:
             raise serializers.ValidationError("This tweet is too long")
         return value
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['timestamp'] = naturaltime(instance.timestamp)
+        return representation
 
 class CommentCreateSerializer(serializers.ModelSerializer):
     user = PublicProfileSerializer(source='user.profile', read_only=True) # serializers.SerializerMethodField(read_only=True)
@@ -86,7 +94,9 @@ class CommentCreateSerializer(serializers.ModelSerializer):
 #     # def get_user(self, obj):
 #     #     return obj.user.id
 
-
+# class CountComments(serializers.ModelSerializer):
+#     class Meta:
+#         model
 
 
 class CommentTweetSerializer(serializers.ModelSerializer):
@@ -94,6 +104,7 @@ class CommentTweetSerializer(serializers.ModelSerializer):
     # likes = serializers.SerializerMethodField(read_only=True)
     # image = serializers.SerializerMethodField()
     # parent = CommentCreateSerializer(read_only=True)
+    total_comments = serializers.SerializerMethodField()
     class Meta:
         model = Comment
         fields = [
@@ -102,10 +113,18 @@ class CommentTweetSerializer(serializers.ModelSerializer):
                 'content',
                 'image',
                 'tweet',
+                'total_comments',
                 # 'likes',
                 # 'is_retweet',
                 # 'parent',
-                'timestamp']
+                'timestamp'
+                ]
+
+    def get_total_comments(self, obj):
+
+        total = Comment.objects.filter(tweet_id=15).count()
+        return total
+
     def get_likes(self,obj):
         return obj.likes.count()
 
@@ -116,6 +135,11 @@ class CommentTweetSerializer(serializers.ModelSerializer):
             image = None
         return image 
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['timestamp'] = naturaltime(instance.timestamp)
+        return representation
+
 
 class TweetSerializer(serializers.ModelSerializer):
     # user = PublicProfileSerializer(source='user.profile', read_only=True)
@@ -123,6 +147,8 @@ class TweetSerializer(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField(read_only=True)
     #image = serializers.SerializerMethodField()
     parent = TweetCreateSerializer(read_only=True)
+    # timesince = serializers.DateTimeField()
+    timestamp = serializers.Field(source='FORMAT')
     class Meta:
         model = Tweet
         fields = [
@@ -138,6 +164,7 @@ class TweetSerializer(serializers.ModelSerializer):
 
     def get_likes(self, obj):
         return obj.likes.count()
+
 
 # class Base64ImageField(serializers.ImageField):
 #     def to_internal_value(self, data):
@@ -183,9 +210,9 @@ class VideoSerializer(serializers.ModelSerializer):
         model = UploadVideo
         fields = [
             # 'user', 
-            'videoname', 
-            'video',
-            # 'image',
+            # 'videoname', 
+            # 'video',
+            'image',
             # 'about',
             ]
 
@@ -198,6 +225,7 @@ class CommentVideoSerializer(serializers.ModelSerializer):
             'uploadedvideo', 
             'comment',
             ]
+
 
     # def get_comments(self, tweet_id):
     #     comment_query  = Comment.objects.filter(
