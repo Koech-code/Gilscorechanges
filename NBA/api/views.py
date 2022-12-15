@@ -18,8 +18,10 @@ from ..serializers import (
     TweetCreateSerializer,
     VideoSerializer,
     CommentTweetSerializer,
-    CommentVideoSerializer
+    CommentVideoSerializer, 
+    NBATweetsSerializer,
 )
+from django.contrib.auth.models import User
 
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
@@ -257,3 +259,16 @@ def tweet_detail_view_pure_django(request, tweet_id, *args, **kwargs):
         data['message'] = "Not found"
         status = 404
     return JsonResponse(data, status=status) # json.dumps content_type='application/json'
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def all_tweets_per_username(request, username, *args, **kwargs):
+    '''
+    See all tweets for a user
+    '''
+    users = User.objects.filter(username=username)
+    filter_model = Tweet.objects.filter(user__in=users)
+    serializer = NBATweetsSerializer(filter_model, many=True)
+
+    return Response(serializer.data)
