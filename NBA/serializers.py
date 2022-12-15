@@ -5,6 +5,7 @@ from profiles.serializers import PublicProfileSerializer
 from .models import Tweet, Comment, NBAVideo, CommentNBAVideo
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
+
 MAX_TWEET_LENGTH = settings.MAX_TWEET_LENGTH
 TWEET_ACTION_OPTIONS = settings.TWEET_ACTION_OPTIONS
 
@@ -133,8 +134,9 @@ class TweetSerializer(serializers.ModelSerializer):
     user = PublicProfileSerializer(source='user.profile', read_only=True)
     #tweets_comments = serializers.SerializerMethodField()
     likes = serializers.SerializerMethodField(read_only=True)
+    likes = serializers.SerializerMethodField(read_only=True)
     #image = serializers.SerializerMethodField()
-    parent = TweetCreateSerializer(read_only=True)
+    user_tweets = serializers.SerializerMethodField()
     class Meta:
         model = Tweet
         fields = [
@@ -147,6 +149,10 @@ class TweetSerializer(serializers.ModelSerializer):
                 'parent',
                 'timestamp']
                 #'tweets_comments']
+
+    def get_user_tweets(self, obj):
+        user_tweets = Tweet.objects.filter(obj=obj.user.username)
+        return user_tweets
 
     def get_likes(self, obj):
         return obj.likes.count()
@@ -169,6 +175,16 @@ class CommentVideoSerializer(serializers.ModelSerializer):
             'uploadedvideo', 
             'comment',
             ]
+
+class NBATweetsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tweet
+        fields = '__all__'
+            
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['timestamp'] = naturaltime(instance.timestamp)
+        return representation
 
     # def get_comments(self, tweet_id):
     #     comment_query  = Comment.objects.filter(
