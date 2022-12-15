@@ -13,6 +13,7 @@ from .views import (
     comment_video_view,
     see_all_video_comments,
     see_all_tweet_comments,
+    all_tweets_per_username
 )
 '''
 CLIENT
@@ -31,4 +32,5 @@ urlpatterns = [
     path('videocomments/<int:pk>/', see_all_video_comments),
     path('commentvideo/', comment_video_view),
     path('tweetcomments/<int:id>/', see_all_tweet_comments),
+    path('tweets-per-user/<username>/', all_tweets_per_username),
 ]
